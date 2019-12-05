@@ -4,6 +4,7 @@
         
         private $conn;
         private $table = 'jogosusados';
+        
         public $id;
         public $nome;
         public $preco;
@@ -74,11 +75,42 @@
 
             $stmt = $this->conn->prepare($query);
 
-            $this->id = htmlspecialchars(strip_tags($this->id));
             $this->nome = htmlspecialchars(strip_tags($this->nome));
             $this->preco = htmlspecialchars(strip_tags($this->preco));
             $this->avaliacao = htmlspecialchars(strip_tags($this->avaliacao));
 
+            $stmt->bindParam(':id', $this->id);
+            $stmt->bindParam(':nome', $this->nome);
+            $stmt->bindParam(':preco', $this->preco);
+            $stmt->bindParam(':avaliacao', $this->avaliacao);
+
+            if($stmt->execute()){
+                return true;
+          }
+
+            printf("Error: %s.\n", $stmt->error);
+
+            return false;
+        }
+
+        public function uptade(){
+
+            $query = 'UPDATE ' . $this->table . '
+                SET 
+                 id = :id,
+                 nome = :nome,
+                 preco = :preco,
+                 avaliacao = :avaliacao
+                WHERE
+                 id = :id';
+
+            $stmt = $this->conn->prepare($query);
+
+            $this->id = htmlspecialchars(strip_tags($this->id));
+            $this->nome = htmlspecialchars(strip_tags($this->nome));
+            $this->preco = htmlspecialchars(strip_tags($this->preco));
+            $this->avaliacao = htmlspecialchars(strip_tags($this->avaliacao));
+            
             $stmt->bindParam(':id', $this->id);
             $stmt->bindParam(':nome', $this->nome);
             $stmt->bindParam(':preco', $this->preco);
